@@ -1,103 +1,131 @@
-let numbers = [10,20,30,40,50];
+const cart = [];
 
-display();
+displayCart();
 
-function display(){
-    document.getElementById("array").innerHTML = numbers.join(", ");
+function displayCart() {
+    const cartElement = document.getElementById("cart");
+
+    if (cart.length === 0) {
+        cartElement.innerHTML = "<p class='empty'>Your cart is empty.</p>";
+        return;
+    }
+
+    const rows = cart.map(item => {
+        const subtotal = (item.price * item.quantity).toFixed(2);
+        return `
+            <tr>
+                <td>${item.name}</td>
+                <td>$${item.price.toFixed(2)}</td>
+                <td>${item.quantity}</td>
+                <td>$${subtotal}</td>
+            </tr>`;
+    }).join("");
+
+    cartElement.innerHTML = `
+        <table class="cart-table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Qty</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+        </table>`;
 }
 
-function pushItem(){
+function addItem() {
+    const nameInput = document.getElementById("name");
+    const priceInput = document.getElementById("price");
+    const quantityInput = document.getElementById("quantity");
 
-    let value = Number(document.getElementById("value").value);
+    const name = nameInput.value.trim();
+    const price = Number(priceInput.value);
+    const quantity = Number(quantityInput.value);
 
-    numbers.push(value);
+    if (!name) {
+        showResult("Please enter a product name.");
+        return;
+    }
 
-    display();
+    if (!Number.isFinite(price) || price < 1 || price > 1000) {
+        showResult("Price must be between $1 and $1000.");
+        return;
+    }
 
-    document.getElementById("result").innerHTML="push() executed";
+    if (!Number.isInteger(quantity) || quantity < 1 || quantity > 10) {
+        showResult("Quantity must be an integer between 1 and 10.");
+        return;
+    }
+
+    cart.push({ name, price, quantity });
+    nameInput.value = "";
+    priceInput.value = "";
+    quantityInput.value = "";
+
+    displayCart();
+    showResult(`Added ${quantity} x ${name} to the cart.`);
 }
 
-function popItem(){
+function removeLastItem() {
+    if (cart.length === 0) {
+        showResult("Cart is already empty.");
+        return;
+    }
 
-    let removed = numbers.pop();
-
-    display();
-
-    document.getElementById("result").innerHTML="Removed : "+removed;
+    const removed = cart.pop();
+    displayCart();
+    showResult(`Removed ${removed.name} from the cart.`);
 }
 
-function shiftItem(){
+function clearCart() {
+    if (cart.length === 0) {
+        showResult("Cart is already empty.");
+        return;
+    }
 
-    let removed = numbers.shift();
-
-    display();
-
-    document.getElementById("result").innerHTML="Removed : "+removed;
+    cart.length = 0;
+    displayCart();
+    showResult("All items have been removed from the cart.");
 }
 
-function unshiftItem(){
+function totalAmount() {
+    if (cart.length === 0) {
+        showResult("Your cart is empty.");
+        return;
+    }
 
-    let value = Number(document.getElementById("value").value);
-
-    numbers.unshift(value);
-
-    display();
-
-    document.getElementById("result").innerHTML="unshift() executed";
+    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    showResult(`Cart total: $${total.toFixed(2)}`);
 }
 
-function spliceItem(){
+function expensiveItems() {
+    if (cart.length === 0) {
+        showResult("Your cart is empty.");
+        return;
+    }
 
-    let value = Number(document.getElementById("value").value);
+    const expensive = cart.filter(item => item.price >= 50);
+    if (expensive.length === 0) {
+        showResult("No items priced $50 or more.");
+        return;
+    }
 
-    numbers.splice(2,0,value);
-
-    display();
-
-    document.getElementById("result").innerHTML="Inserted at index 2";
+    const names = expensive.map(item => item.name).join(", ");
+    showResult(`Expensive items: ${names}`);
 }
 
-function sliceItem(){
+function listNames() {
+    if (cart.length === 0) {
+        showResult("Your cart is empty.");
+        return;
+    }
 
-    let newArray = numbers.slice(1,4);
-
-    document.getElementById("result").innerHTML=
-    "Slice : "+newArray;
+    const names = cart.map(item => item.name).join(", ");
+    showResult(`Items in cart: ${names}`);
 }
 
-function mapItem(){
-
-    let newArray = numbers.map(num=>num*2);
-
-    document.getElementById("result").innerHTML=
-    "Map : "+newArray;
-}
-
-function filterItem(){
-
-    let newArray = numbers.filter(num=>num>25);
-
-    document.getElementById("result").innerHTML=
-    "Filter : "+newArray;
-}
-
-function reduceItem(){
-
-    let total = numbers.reduce((sum,num)=>sum+num,0);
-
-    document.getElementById("result").innerHTML=
-    "Sum = "+total;
-}
-
-function forEachItem(){
-
-    let text="";
-
-    numbers.forEach(function(num){
-
-        text += num+" ";
-
-    });
-
-    document.getElementById("result").innerHTML=text;
+function showResult(message) {
+    document.getElementById("result").textContent = message;
 }
