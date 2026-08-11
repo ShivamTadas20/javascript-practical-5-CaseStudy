@@ -3,36 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Array Operations</title>
+    <title>Shopping Cart</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="container">
+    <header>
+        <div>
+            <h1>Shopping Cart</h1>
+            <p>Add products with price and quantity, then use cart actions.</p>
+        </div>
+    </header>
 
-    <h2>JavaScript Array Operations</h2>
-
-    <input type="number" id="value" placeholder="Enter Number">
-
-    <div class="buttons">
-        <button onclick="pushItem()">Push</button>
-        <button onclick="popItem()">Pop</button>
-        <button onclick="shiftItem()">Shift</button>
-        <button onclick="unshiftItem()">Unshift</button>
-        <button onclick="spliceItem()">Splice</button>
-        <button onclick="sliceItem()">Slice</button>
-        <button onclick="mapItem()">Map</button>
-        <button onclick="filterItem()">Filter</button>
-        <button onclick="reduceItem()">Reduce</button>
-        <button onclick="forEachItem()">forEach</button>
+    <div class="product-form">
+        <label>
+            Item Name
+            <input type="text" id="name" placeholder="Example: Sneakers" maxlength="30">
+        </label>
+        <label>
+            Price ($)
+            <input type="number" id="price" placeholder="1 - 1000" min="1" max="1000">
+        </label>
+        <label>
+            Quantity
+            <input type="number" id="quantity" placeholder="1 - 10" min="1" max="10">
+        </label>
+        <button class="primary" onclick="addItem()">Add to Cart</button>
     </div>
 
-    <h3>Current Array</h3>
-    <p id="array"></p>
+    <div class="buttons">
+        <button onclick="removeLastItem()">Remove Last Item</button>
+        <button onclick="clearCart()">Clear Cart</button>
+        <button onclick="totalAmount()">Show Total</button>
+        <button onclick="expensiveItems()">Expensive Items</button>
+        <button onclick="listNames()">List Item Names</button>
+    </div>
 
-    <h3>Result</h3>
-    <p id="result"></p>
+    <section class="cart-panel">
+        <h2>Cart Items</h2>
+        <div id="cart"></div>
+    </section>
 
+    <section class="result-panel">
+        <h2>Result</h2>
+        <p id="result">Your cart is empty.</p>
+    </section>
 </div>
 
 <script src="script.js"></script>
